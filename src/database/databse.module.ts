@@ -1,20 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Proposal } from 'src/contracts/entities/proposal.entity';
-import { User } from 'src/contracts/entities/user.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      port: 5432,
-      username: 'postgres',
-      password: '1234',
-      database: 'postgres',
-      synchronize: true,
-      host: 'localhost',
-      schema: 'public',
-      entities: [User, Proposal],
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      synchronize: Boolean(process.env.DB_SYNCHRONIZE),
+      host: process.env.DB_HOST,
+      schema: process.env.DB_SCHEMA,
+      entities: [__dirname + '/../**/*.entity.js'],
     }),
   ],
   providers: [],

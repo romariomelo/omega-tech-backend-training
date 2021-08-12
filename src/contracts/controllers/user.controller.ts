@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Res,
+  NotFoundException,
+} from '@nestjs/common';
 import { UserService } from 'src/contracts/services/user.service';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -16,6 +24,22 @@ export class UserController {
     const users = await this.userService.findAll();
     return users;
   }
+
+  @Get(':id')
+  async findByPublicId(@Param() param) {
+    const { id } = param;
+    const user = await this.userService.findByPublicId(id);
+    if (!user) throw new NotFoundException(`User of id '${id}' not found.`);
+    return user;
+  }
+
+  @Get('findByEmail/:email')
+  async findByEmail(@Param() param) {
+    const { email } = param;
+    console.log(email);
+    return this.userService.findByEmail(email);
+  }
+
   @Post()
   async add(@Body() createUserDto: CreateUserDto, @Res() response: Response) {
     createUserDto.password = await bcrypt.hash(

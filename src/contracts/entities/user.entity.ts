@@ -15,7 +15,10 @@ export class User {
   email: string;
 
   @Column()
-  private password: string;
+  public password: string;
+  get getPassword(): string {
+    return this.password;
+  }
 
   constructor(publicId: string, name: string, email: string, password: string) {
     this.publicId = publicId;

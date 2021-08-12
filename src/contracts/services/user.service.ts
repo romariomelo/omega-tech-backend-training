@@ -14,6 +14,14 @@ export class UserService {
     return this.usersRepository.find();
   }
 
+  async findByPublicId(publicId): Promise<User> {
+    return this.usersRepository.findOne({ where: [{ publicId }] });
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    return this.usersRepository.findOne({ where: [{ email }] });
+  }
+
   create(user: User): Promise<User> {
     return this.usersRepository.save(user);
   }
