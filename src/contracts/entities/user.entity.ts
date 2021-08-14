@@ -16,6 +16,7 @@ export class User {
 
   @Column()
   public password: string;
+
   get getPassword(): string {
     return this.password;
   }
