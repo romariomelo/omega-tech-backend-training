@@ -1,7 +1,8 @@
-import { Post, UseGuards, Request, Body } from '@nestjs/common';
+import { Post, UseGuards, Request, Body, Get } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
-import { LocalAuthGuard } from '../local-auth.guard';
+import { LocalAuthGuard } from '../strategies/local-auth.guard';
 import { AuthService } from '../services/auth.service';
+import { JwtAuthGuard } from '../strategies/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -9,8 +10,12 @@ export class AuthController {
   @Post('login')
   @UseGuards(LocalAuthGuard)
   async login(@Request() req, @Body() body) {
-    console.log('AuthController.login');
-    body.access_token = 'aaaaaaaaaaaaaaaaa';
-    return body; // DEVE RETORNA O TOKEN JWT ou BASIC
+    return this.authService.login(req.user);
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  async me() {
+    return { message: 'Is Me' };
   }
 }

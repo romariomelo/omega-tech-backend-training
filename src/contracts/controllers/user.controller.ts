@@ -6,6 +6,7 @@ import {
   Post,
   Res,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from 'src/contracts/services/user.service';
 import { CreateUserDto } from '../dtos/create-user.dto';
@@ -13,12 +14,15 @@ import * as bcrypt from 'bcrypt';
 import { User } from '../entities/user.entity';
 import { Guid } from 'guid-typescript';
 import { Response } from 'express';
+import { JwtAuthGuard } from 'src/auth/strategies/jwt-auth.guard';
 
 const GEN_SALT = 2; // QUANTIDADE SALTOS DA CRIPOGRAFIA (BCRYPT)
 
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
   @Get()
   async findAll() {
     const users = await this.userService.findAll();
@@ -36,7 +40,6 @@ export class UserController {
   @Get('findByEmail/:email')
   async findByEmail(@Param() param) {
     const { email } = param;
-    console.log(email);
     return this.userService.findByEmail(email);
   }
 
